@@ -6,6 +6,9 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.syndicate.deployment.annotations.LambdaUrlConfig;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
+import com.syndicate.deployment.annotations.lambda.LambdaLayer;
+import com.syndicate.deployment.model.ArtifactExtension;
+import com.syndicate.deployment.model.DeploymentRuntime;
 import com.syndicate.deployment.model.lambda.url.AuthType;
 import com.syndicate.deployment.model.lambda.url.InvokeMode;
 
@@ -13,6 +16,11 @@ import com.syndicate.deployment.model.lambda.url.InvokeMode;
 		roleName = "hello_world-role",
 		isPublishVersion = true,
 		aliasName = "${lambdas_alias_name}"
+)
+@LambdaLayer(
+		layerName = "sdk-layer",
+		runtime = DeploymentRuntime.JAVA8,
+		artifactExtension = ArtifactExtension.ZIP
 )
 @LambdaUrlConfig(
 		authType = AuthType.NONE,
