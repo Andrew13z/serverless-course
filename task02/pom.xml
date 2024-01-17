@@ -35,11 +35,6 @@
             <artifactId>deployment-configuration-annotations</artifactId>
             <version>${deployment-configuration-annotations.version}</version>
         </dependency>
-        <dependency>
-            <groupId>demo.custom.sdk</groupId>
-            <artifactId>gson-downloaded-library</artifactId>
-            <version>2.10.1</version>
-        </dependency>
     </dependencies>
 
     <build>
