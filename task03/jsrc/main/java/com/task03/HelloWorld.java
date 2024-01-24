@@ -22,16 +22,11 @@ public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, A
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request,
 													  Context context) {
-		if ("GET".equals(request.getHttpMethod()) && request.getPath().endsWith("/hello")) {
-
-			return new APIGatewayProxyResponseEvent()
-					.withStatusCode(200)
-					.withBody("{\n" +
-									  "    \"statusCode\": 200,\n" +
-									  "    \"message\": \"Hello from Lambda\"\n" +
-									  "}");
-		}
-
-		return new APIGatewayProxyResponseEvent().withStatusCode(400);
+		return new APIGatewayProxyResponseEvent()
+				.withStatusCode(200)
+				.withBody("{\n" +
+								  "    \"statusCode\": 200,\n" +
+								  "    \"message\": \"Hello from Lambda\"\n" +
+								  "}");
 	}
 }
