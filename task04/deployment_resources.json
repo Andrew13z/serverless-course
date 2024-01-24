@@ -7,11 +7,8 @@
             "logs:CreateLogGroup",
             "logs:CreateLogStream",
             "logs:PutLogEvents",
-            "dynamodb:GetItem",
-            "dynamodb:Query",
-            "dynamodb:PutItem",
-            "dynamodb:Batch*",
-            "dynamodb:DeleteItem",
+            "sqs:*",
+            "sns:*",
             "ssm:PutParameter",
             "ssm:GetParameter",
             "kms:Decrypt"
