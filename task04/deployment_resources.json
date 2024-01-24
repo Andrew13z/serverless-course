@@ -55,14 +55,11 @@
     "maximum_message_size": 1024,
     "message_retention_period": 60,
     "receive_message_wait_time_seconds": 0,
-    "policy": {},
-    "redrive_policy": {},
     "content_based_deduplication": false
   },
   "lambda_topic": {
     "resource_type": "sns_application",
     "platform": "GCM",
-    "region": "eu-central-1",
-    "attributes": {}
+    "region": "eu-central-1"
   }
 }
