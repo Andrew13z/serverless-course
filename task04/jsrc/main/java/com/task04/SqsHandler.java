@@ -14,7 +14,7 @@ import java.util.Map;
 	roleName = "sqs_handler-role",
 	isPublishVersion = true
 )
-@SqsTriggerEventSource(targetQueue = "sqs_queue", batchSize = 1)
+@SqsTriggerEventSource(targetQueue = "async_queue", batchSize = 1)
 public class SqsHandler implements RequestHandler<SQSEvent, Void> {
 
 	@Override
