@@ -13,8 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @LambdaHandler(lambdaName = "sqs_handler",
-	roleName = "sqs_handler-role",
-	isPublishVersion = true
+	roleName = "sqs_handler-role"
 )
 @SqsTriggerEventSource(targetQueue = "async_queue", batchSize = 1)
 @DependsOn(resourceType = ResourceType.SQS_QUEUE, name = "async_queue")
