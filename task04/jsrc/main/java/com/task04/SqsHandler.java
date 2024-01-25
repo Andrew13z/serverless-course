@@ -15,7 +15,7 @@ import java.util.Map;
 @LambdaHandler(lambdaName = "sqs_handler",
 	roleName = "sqs_handler-role"
 )
-@SqsTriggerEventSource(targetQueue = "async_queue", batchSize = 1)
+@SqsTriggerEventSource(targetQueue = "async_queue", batchSize = 10)
 @DependsOn(resourceType = ResourceType.SQS_QUEUE, name = "async_queue")
 public class SqsHandler implements RequestHandler<SQSEvent, Void> {
 
