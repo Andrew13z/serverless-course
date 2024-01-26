@@ -22,4 +22,12 @@ public class ApiRequest {
 	public void setContent(Map<String, String> content) {
 		this.content = content;
 	}
+
+	@Override
+	public String toString() {
+		return "ApiRequest{" +
+				"principalId=" + principalId +
+				", content=" + content +
+				'}';
+	}
 }

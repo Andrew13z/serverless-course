@@ -32,8 +32,12 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent,
 													  Context context) {
+		context.getLogger().log("reqeust event: " + apiGatewayProxyRequestEvent.toString());
+		
 		String json = apiGatewayProxyRequestEvent.getBody();
+		context.getLogger().log("json: " + json);
 		ApiRequest apiRequest = gson.fromJson(json, ApiRequest.class);
+		context.getLogger().log("mapped: " + apiRequest.toString());
 
 		Event event = toEvent(apiRequest);
 
