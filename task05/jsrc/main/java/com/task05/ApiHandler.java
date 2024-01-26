@@ -83,9 +83,9 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 
 	private String mapToString(Map<String, String> map) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("{");
+		sb.append("{\"");
 		map.forEach((key, value) -> {
-			sb.append(key).append("=").append(value).append(", ");
+			sb.append(key).append("\"=\"").append(value).append("\", ");
 		});
 		sb.setLength(sb.length() - 2);
 		sb.append("}");
