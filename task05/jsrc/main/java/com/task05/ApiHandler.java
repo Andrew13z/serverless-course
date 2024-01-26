@@ -8,8 +8,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPResponse;
 import com.google.gson.Gson;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 
@@ -22,7 +20,7 @@ import java.util.UUID;
 @LambdaHandler(lambdaName = "api_handler",
 		roleName = "api_handler-role"
 )
-public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse> {
+public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
 	private static final int SC_OK = 200;
 	private static final String TABLE_NAME = "Events";
@@ -32,7 +30,7 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
 	private final Gson gson = new Gson();
 
 	@Override
-	public APIGatewayV2HTTPResponse handleRequest(APIGatewayV2HTTPEvent apiGatewayProxyRequestEvent,
+	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent,
 													  Context context) {
 		context.getLogger().log("reqeust event: " + apiGatewayProxyRequestEvent.toString());
 		
@@ -47,10 +45,9 @@ public class ApiHandler implements RequestHandler<APIGatewayV2HTTPEvent, APIGate
 
 		persist(event);
 
-		return APIGatewayV2HTTPResponse.builder()
+		return new APIGatewayProxyResponseEvent()
 				.withStatusCode(SC_OK)
-				.withBody(gson.toJson(new ApiResponse(SC_OK, event)))
-				.build();
+				.withBody(gson.toJson(new ApiResponse(SC_OK, event)));
 	}
 
 	private Event toEvent(ApiRequest apiRequest) {
