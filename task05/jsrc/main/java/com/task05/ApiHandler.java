@@ -6,10 +6,11 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.Gson;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
+import com.syndicate.deployment.annotations.resources.DependsOn;
+import com.syndicate.deployment.model.ResourceType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +21,8 @@ import java.util.UUID;
 @LambdaHandler(lambdaName = "api_handler",
 		roleName = "api_handler-role"
 )
-public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+@DependsOn(name = "Events", resourceType = ResourceType.DYNAMODB_TABLE)
+public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyResponseEvent> {
 
 	private static final int SC_OK = 200;
 	private static final String TABLE_NAME = "Events";
@@ -30,13 +32,8 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	private final Gson gson = new Gson();
 
 	@Override
-	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent,
+	public APIGatewayProxyResponseEvent handleRequest(ApiRequest apiRequest,
 													  Context context) {
-		context.getLogger().log("reqeust event: " + apiGatewayProxyRequestEvent.toString());
-		
-		String json = apiGatewayProxyRequestEvent.getBody();
-		context.getLogger().log("json: " + json);
-		ApiRequest apiRequest = gson.fromJson(json, ApiRequest.class);
 		context.getLogger().log("mapped: " + apiRequest.toString());
 
 		Event event = toEvent(apiRequest);
