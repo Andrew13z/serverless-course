@@ -67,7 +67,7 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 		Map<String, AttributeValue> attributesMap = new HashMap<>();
 
 		attributesMap.put("id", new AttributeValue(event.getId()));
-		attributesMap.put("principalId", new AttributeValue(String.valueOf(event.getPrincipalId())));
+		attributesMap.put("principalId", new AttributeValue().withN(String.valueOf(event.getPrincipalId())));
 		attributesMap.put("createdAt", new AttributeValue(event.getCreatedAt()));
 		attributesMap.put("body", new AttributeValue(gson.toJson(event.getBody())));
 
