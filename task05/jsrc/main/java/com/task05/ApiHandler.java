@@ -8,6 +8,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.Gson;
+import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
+import com.syndicate.deployment.annotations.environment.EnvironmentVariables;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.resources.DependsOn;
 import com.syndicate.deployment.model.ResourceType;
@@ -22,10 +24,12 @@ import java.util.UUID;
 		roleName = "api_handler-role"
 )
 @DependsOn(name = "Events", resourceType = ResourceType.DYNAMODB_TABLE)
+@EnvironmentVariables(value = {
+		@EnvironmentVariable(key = "target_table", value = "${target_table}"),
+})
 public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyResponseEvent> {
 
 	private static final int SC_OK = 200;
-	private static final String TABLE_NAME = "Events";
 	private static final Regions REGION = Regions.EU_CENTRAL_1;
 
 	private AmazonDynamoDB amazonDynamoDB;
@@ -67,7 +71,7 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 		attributesMap.put("createdAt", new AttributeValue(event.getCreatedAt()));
 		attributesMap.put("body", new AttributeValue(gson.toJson(event.getBody())));
 
-		amazonDynamoDB.putItem(TABLE_NAME, attributesMap);
+		amazonDynamoDB.putItem(System.getenv("target_table"), attributesMap);
 	}
 
 	private void initDynamoDbClient() {
