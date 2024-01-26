@@ -56,8 +56,7 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 
 		event.setId(UUID.randomUUID().toString());
 		event.setPrincipalId(apiRequest.getPrincipalId());
-		event.setCreatedAt(LocalDateTime.now().format(
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")));
+		event.setCreatedAt(LocalDateTime.now().toString());
 		event.setBody(apiRequest.getContent());
 
 		return event;
