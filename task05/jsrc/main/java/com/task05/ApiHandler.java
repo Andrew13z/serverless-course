@@ -16,6 +16,7 @@ import com.syndicate.deployment.model.ResourceType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -56,7 +57,8 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 
 		event.setId(UUID.randomUUID().toString());
 		event.setPrincipalId(apiRequest.getPrincipalId());
-		event.setCreatedAt(LocalDateTime.now().toString());
+		event.setCreatedAt(LocalDateTime.now().format(
+				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.ss'Z'")));
 		event.setBody(apiRequest.getContent());
 
 		return event;
@@ -68,7 +70,7 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 		attributesMap.put("id", new AttributeValue(event.getId()));
 		attributesMap.put("principalId", new AttributeValue().withN(String.valueOf(event.getPrincipalId())));
 		attributesMap.put("createdAt", new AttributeValue(event.getCreatedAt()));
-		attributesMap.put("body", new AttributeValue(gson.toJson(event.getBody())));
+		attributesMap.put("body", new AttributeValue(mapToString(event.getBody())));
 
 		amazonDynamoDB.putItem(System.getenv("target_table"), attributesMap);
 	}
@@ -77,5 +79,16 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 		this.amazonDynamoDB = AmazonDynamoDBClientBuilder.standard()
 				.withRegion(REGION)
 				.build();
+	}
+
+	private String mapToString(Map<String, String> map) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		map.forEach((key, value) -> {
+			sb.append(key).append("=").append(value).append(", ");
+		});
+		sb.setLength(sb.length() - 2);
+		sb.append("}");
+		return sb.toString();
 	}
 }
