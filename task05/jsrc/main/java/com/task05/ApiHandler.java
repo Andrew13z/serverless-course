@@ -17,6 +17,7 @@ import com.syndicate.deployment.model.ResourceType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -66,7 +67,7 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 	}
 
 	private void persist(Event event) {
-		Map<String, AttributeValue> attributesMap = new HashMap<>();
+		Map<String, AttributeValue> attributesMap = new LinkedHashMap<>();
 
 		attributesMap.put("id", new AttributeValue(event.getId()));
 		attributesMap.put("principalId", new AttributeValue().withN(String.valueOf(event.getPrincipalId())));
