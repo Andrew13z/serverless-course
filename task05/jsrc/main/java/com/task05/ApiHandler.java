@@ -16,10 +16,11 @@ import com.syndicate.deployment.model.ResourceType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.amazonaws.services.dynamodbv2.document.ItemUtils.fromSimpleMap;
 
 @LambdaHandler(lambdaName = "api_handler",
 		roleName = "api_handler-role"
@@ -70,7 +71,7 @@ public class ApiHandler implements RequestHandler<ApiRequest, APIGatewayProxyRes
 		attributesMap.put("id", new AttributeValue(event.getId()));
 		attributesMap.put("principalId", new AttributeValue().withN(String.valueOf(event.getPrincipalId())));
 		attributesMap.put("createdAt", new AttributeValue(event.getCreatedAt()));
-		attributesMap.put("body", new AttributeValue(mapToString(event.getBody())));
+		attributesMap.put("body", new AttributeValue().withM(fromSimpleMap(event.getBody())));
 
 		amazonDynamoDB.putItem(System.getenv("target_table"), attributesMap);
 	}

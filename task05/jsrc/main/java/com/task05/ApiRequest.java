@@ -5,7 +5,7 @@ import java.util.Map;
 public class ApiRequest {
 
 	private int principalId;
-	private Map<String, String> content;
+	private Map<String, Object> content;
 
 	public int getPrincipalId() {
 		return principalId;
@@ -15,11 +15,11 @@ public class ApiRequest {
 		this.principalId = principalId;
 	}
 
-	public Map<String, String> getContent() {
+	public Map<String, Object> getContent() {
 		return content;
 	}
 
-	public void setContent(Map<String, String> content) {
+	public void setContent(Map<String, Object> content) {
 		this.content = content;
 	}
 

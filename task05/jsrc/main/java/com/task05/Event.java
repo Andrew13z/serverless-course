@@ -7,7 +7,7 @@ public class Event {
 	private String id;
 	private int principalId;
 	private String createdAt;
-	private Map<String, String> body;
+	private Map<String, Object> body;
 
 	public String getId() {
 		return id;
@@ -33,11 +33,11 @@ public class Event {
 		this.createdAt = createdAt;
 	}
 
-	public Map<String, String> getBody() {
+	public Map<String, Object> getBody() {
 		return body;
 	}
 
-	public void setBody(Map<String, String> body) {
+	public void setBody(Map<String, Object> body) {
 		this.body = body;
 	}
 }
