@@ -60,6 +60,8 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 			fos = new FileOutputStream(tempFile);
 			pw = new PrintWriter(fos);
 			uuids.forEach(pw::println);
+			pw.flush();
+			fos.flush();
 			
 			return tempFile;
 		} catch (IOException e) {
