@@ -42,6 +42,7 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 				time,
 				generateFile(context));
 
+		initAmazonS3();
 		amazonS3.putObject(putOb);
 
 		return null;
@@ -77,7 +78,7 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 		}
 	}
 
-	private void initDynamoDbClient() {
+	private void initAmazonS3() {
 		this.amazonS3 = AmazonS3ClientBuilder.standard()
 				.withRegion(Regions.EU_CENTRAL_1)
 				.build();
