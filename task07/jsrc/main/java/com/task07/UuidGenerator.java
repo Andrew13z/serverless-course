@@ -4,7 +4,6 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
@@ -12,23 +11,16 @@ import com.syndicate.deployment.annotations.environment.EnvironmentVariables;
 import com.syndicate.deployment.annotations.events.RuleEventSource;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @LambdaHandler(lambdaName = "uuid_generator",
 		roleName = "uuid_generator-role"
@@ -48,14 +40,14 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 		PutObjectRequest putOb = new PutObjectRequest(
 				System.getenv("target_bucket"),
 				time,
-				generateFile());
+				generateFile(context));
 
 		amazonS3.putObject(putOb);
 
 		return null;
 	}
 
-	private File generateFile() {
+	private File generateFile(Context context) {
 		List<String> uuids = IntStream.range(0, 10)
 				.mapToObj(i -> UUID.randomUUID().toString())
 				.collect(Collectors.toList());
@@ -73,10 +65,14 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 			throw new RuntimeException(e);
 		} finally {
 			try {
-				fos.close();
-				pw.close();
+				if (fos != null) {
+					fos.close();
+				}
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				context.getLogger().log("Error when closing fos: " + e.getMessage());
+			}
+			if (pw != null) {
+				pw.close();
 			}
 		}
 	}
