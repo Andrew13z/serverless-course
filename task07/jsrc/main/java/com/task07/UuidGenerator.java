@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.google.gson.Gson;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariable;
 import com.syndicate.deployment.annotations.environment.EnvironmentVariables;
 import com.syndicate.deployment.annotations.events.RuleEventSource;
@@ -17,7 +18,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -32,6 +35,7 @@ import java.util.stream.IntStream;
 public class UuidGenerator implements RequestHandler<Object, Void> {
 
 	private AmazonS3 amazonS3;
+	private final Gson gson = new Gson();
 
 
 	public Void handleRequest(Object request, Context context) {
@@ -49,10 +53,12 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 	}
 
 	private File generateFile(Context context) {
-		String uuids = IntStream.range(0, 10)
+		List<String> uuids = IntStream.range(0, 10)
 				.mapToObj(i -> UUID.randomUUID().toString())
-				.map(uuid -> "'" + uuid + "'")
-				.collect(Collectors.joining(","));
+				.collect(Collectors.toList());
+
+		Map<String, List<String>> map = new HashMap<>();
+		map.put("ids", uuids);
 
 		FileOutputStream fos = null;
 		PrintWriter pw = null;
@@ -60,7 +66,7 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 			File tempFile = File.createTempFile("prefix", "suffix");
 			fos = new FileOutputStream(tempFile);
 			pw = new PrintWriter(fos);
-			pw.print(uuids);
+			pw.print(gson.toJson(map));
 			pw.flush();
 			fos.flush();
 			
