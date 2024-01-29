@@ -23,7 +23,7 @@ import static com.amazonaws.services.dynamodbv2.document.ItemUtils.fromSimpleMap
 @LambdaHandler(lambdaName = "audit_producer",
 		roleName = "audit_producer-role"
 )
-@DynamoDbTriggerEventSource(targetTable = "ConfigurationStream", batchSize = 1)
+@DynamoDbTriggerEventSource(targetTable = "Configuration", batchSize = 1)
 @EnvironmentVariables(value = {
 		@EnvironmentVariable(key = "target_table", value = "${target_table}"),
 })
