@@ -49,9 +49,10 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 	}
 
 	private File generateFile(Context context) {
-		List<String> uuids = IntStream.range(0, 10)
+		String uuids = IntStream.range(0, 10)
 				.mapToObj(i -> UUID.randomUUID().toString())
-				.collect(Collectors.toList());
+				.map(uuid -> "'" + uuid + "'")
+				.collect(Collectors.joining(","));
 
 		FileOutputStream fos = null;
 		PrintWriter pw = null;
@@ -59,7 +60,7 @@ public class UuidGenerator implements RequestHandler<Object, Void> {
 			File tempFile = File.createTempFile("prefix", "suffix");
 			fos = new FileOutputStream(tempFile);
 			pw = new PrintWriter(fos);
-			uuids.forEach(pw::println);
+			pw.print(uuids);
 			pw.flush();
 			fos.flush();
 			
